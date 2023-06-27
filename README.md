@@ -16,7 +16,7 @@ To use jsRedisORM in your project, import the createClient function from the Red
 
 ```javascript
 import { createClient } from "redis";
-import jsRedisORM from "jredis-orm";
+import jsRedisORM from "jsRedisORM.js";
 ```
 
 Create an instance of the jsRedisORM class by providing the required Redis connection details:
