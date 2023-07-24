@@ -147,22 +147,11 @@ export default class jsRedisORM {
     });
   }
 
-  async startTransaction() {
-    const multi = this.client.multi();
-    const execAsync = promisify(multi.exec).bind(multi);
+  async increment(key) {
+    return await this.client.incr(this.getKeyWithPrefix(key));
+  }
 
-    return {
-      multi,
-      exec: async () => {
-        try {
-          const replies = await execAsync();
-          return replies;
-        } catch (error) {
-          throw new Error("Transaction failed: " + error.message);
-        } finally {
-          multi.discard();
-        }
-      },
-    };
+  async decrement(key) {
+    return await this.client.decr(this.getKeyWithPrefix(key));
   }
 }
