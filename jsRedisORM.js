@@ -1,4 +1,5 @@
 import { createClient } from "redis";
+import { promisify } from "util";
 
 export default class jsRedisORM {
   constructor(
@@ -144,5 +145,24 @@ export default class jsRedisORM {
         }
       });
     });
+  }
+
+  async startTransaction() {
+    const multi = this.client.multi();
+    const execAsync = promisify(multi.exec).bind(multi);
+
+    return {
+      multi,
+      exec: async () => {
+        try {
+          const replies = await execAsync();
+          return replies;
+        } catch (error) {
+          throw new Error("Transaction failed: " + error.message);
+        } finally {
+          multi.discard();
+        }
+      },
+    };
   }
 }
