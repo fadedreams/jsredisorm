@@ -1,4 +1,5 @@
 import { createClient } from "redis";
+import { promisify } from "util";
 
 export default class jsRedisORM {
   constructor(
@@ -144,5 +145,13 @@ export default class jsRedisORM {
         }
       });
     });
+  }
+
+  async increment(key) {
+    return await this.client.incr(this.getKeyWithPrefix(key));
+  }
+
+  async decrement(key) {
+    return await this.client.decr(this.getKeyWithPrefix(key));
   }
 }
